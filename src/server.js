@@ -19,13 +19,12 @@ const s3 = new AWS.S3({
 });
 
 const s3Client = async () => {
-  await s3Client
-    .putObject({
-      Body: "This is a vpn file",
-      Bucket: process.env.BUCKET_SPACE,
-      Key: `${username}.jonogon.ovpn`,
-    })
-    .promise();
+  const res = await s3.putObject({
+    Body: "This is a vpn file",
+    Bucket: process.env.BUCKET_SPACE,
+    Key: `test.txt`,
+    ACL: "public-read",
+  });
 };
 
 server.get("/", (req, res) => {
@@ -33,5 +32,6 @@ server.get("/", (req, res) => {
     `<h2>Shall we be interested for the CDN? What do we expect here? It's not a typical CDN server with stuff that you wish to see. But, it's written with what?</h2>`
   );
 });
+s3Client();
 
 module.exports = server;
