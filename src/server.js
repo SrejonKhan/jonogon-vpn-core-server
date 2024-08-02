@@ -1,12 +1,3 @@
-const multer = require("multer");
-const multerS3 = require("multer-s3");
-
-const aws = require("aws-sdk");
-aws.config.update({
-  accessKeyId: process.env.ACCESS_KEY_ID,
-  secretAccessKey: process.env.SECRET_ACCESS_KEY,
-});
-
 const express = require("express");
 var cors = require("cors");
 
@@ -16,37 +7,26 @@ server.use(cors("*"));
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 
-const spaceEndpoint = new aws.Endpoint(process.env.AWS_ENDPOINT);
-const s3 = new aws.S3({
-  endpoint: spaceEndpoint,
+const AWS = require("@aws-sdk/client-s3");
+const s3 = new AWS.S3({
+  forcePathStyle: false,
+  endpoint: process.env.AWS_ENDPOINT,
+  region: "sgp1",
+  credentials: {
+    accessKeyId: process.env.SPACES_KEY,
+    secretAccessKey: process.env.SPACES_SECRET,
+  },
 });
 
-const upload = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: process.env.BUCKET_SPACE,
-    acl: "public-read",
-    key: (req, file, cb) => {
-      // console.log(file);
-      cb(null, file.originalname);
-    },
-  }),
-}).single("upload");
-
-server.post("/upload", (req, res, next) => {
-  try {
-    upload(req, res, (err) => {
-      if (err) {
-        res.send("error");
-        throw err;
-      }
-      res.send("res");
-    });
-  } catch (ex) {
-    console.log(ex.message);
-    next(ex);
-  }
-});
+const s3Client = async () => {
+  await s3Client
+    .putObject({
+      Body: "This is a vpn file",
+      Bucket: process.env.BUCKET_SPACE,
+      Key: `${username}.jonogon.ovpn`,
+    })
+    .promise();
+};
 
 server.get("/", (req, res) => {
   res.send(
