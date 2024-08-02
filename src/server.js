@@ -22,19 +22,25 @@ const upload = multer({
     bucket: process.env.BUCKET_SPACE,
     acl: "public-read",
     key: (req, file, cb) => {
-      console.log(file);
+      // console.log(file);
       cb(null, file.originalname);
     },
   }),
-}).array("upload", 1);
+}).single("upload");
 
 server.post("/upload", (req, res, next) => {
-  upload(req, res, (err) => {
-    if (err) {
-      res.send(err);
-    }
-    res.sendStatus(200);
-  });
+  try {
+    upload(req, res, (err) => {
+      if (err) {
+        res.send("error");
+        throw err;
+      }
+      res.send("res");
+    });
+  } catch (ex) {
+    console.log(ex.message);
+    next(ex);
+  }
 });
 
 server.get("/", (req, res) => {
