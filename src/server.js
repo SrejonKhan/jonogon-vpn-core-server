@@ -1,6 +1,11 @@
-const aws = require("aws-sdk");
 const multer = require("multer");
 const multerS3 = require("multer-s3");
+
+const aws = require("aws-sdk");
+aws.config.update({
+  accessKeyId: "",
+  secretAccessKey: "",
+});
 
 const express = require("express");
 var cors = require("cors");
