@@ -10,9 +10,9 @@ const addOvpnProfile = (reqProfileName, profilePassword, username) => {
     const serverName = process.env.SERVER_NAME;
     const randomStr = crypto.randomBytes(3).toString("base64url");
 
-    // jonogon-sg1-srejon_device-fse24d
-    const ovpnProfileName = `${serverName}-${username}-${reqProfileName}-${randomStr}`;
-    const ovpnProfileNameHash = getUuid(ovpnProfileName);
+    // jonogon-sg1-srejon_device
+    const ovpnProfileName = `${serverName}-${username}-${reqProfileName}`;
+    const ovpnProfileNameHash = getUuid(ovpnProfileName + randomStr);
 
     const command = `MENU_OPTION=1 CLIENT=${ovpnProfileNameHash} PASS=${profilePassword} ./openvpn-install.sh`;
     execSync(command, { stdio: "inherit" });
