@@ -21,10 +21,4 @@ server.get("/", (req, res) => {
   );
 });
 
-(async () => {
-  const path = require("path");
-  const url = await uploadFile(path.join(__dirname, "./app.js"), require("uuid-by-string")("app.js"), "app.js");
-  console.log(url);
-})();
-
 module.exports = server;
