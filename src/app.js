@@ -3,9 +3,18 @@ const server = require("./server");
 
 const port = process.env.PORT;
 
+console.log(
+  `
+/*
+  Long Live Revolution
+  Inquilab Zindabad
+*/
+`
+);
+
 const main = () => {
   server.listen(port, () => {
-    console.log(`Jonogon CDN Server is listening on port ${port}`);
+    console.log(`Jonogon VPN Root Server is listening on port ${port}.`);
   });
 };
 
