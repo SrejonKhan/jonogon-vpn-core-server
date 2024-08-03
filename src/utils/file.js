@@ -6,8 +6,8 @@ const sanitizeOrGenerateStr = (filename) => {
   const minLength = 3;
 
   const finalFilename = "";
-
-  filename = filename.replace(/ /g, "_");
+  filename = filename.toLowerCase();
+  filename = filename.replace(/ /g, "-");
 
   if (typeof filename !== "string" || filename.length < minLength || filename.length > maxLength) {
     finalFilename += crypto.randomBytes(2).toString("hex");
