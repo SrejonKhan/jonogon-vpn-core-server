@@ -1,8 +1,8 @@
 const { s3Client } = require("../config/aws.config");
 const fs = require("fs");
 
-const uploadFile = async (filepath, key) => {
-  if (!fs.existsSync(filepath)) return;
+const uploadFile = async (filepath, key, filename) => {
+  if (!fs.existsSync(filepath)) throw "file not found";
 
   const fileStream = fs.createReadStream(filepath);
 
@@ -15,9 +15,10 @@ const uploadFile = async (filepath, key) => {
     ACL: "public-read",
     Body: fileStream,
     Key: `profiles/${key}`,
+    ContentDisposition: `attachment; filename=${filename}`,
   });
 
-  return `${BUCKET_URL}/profiles/${key}`;
+  return `${process.env.BUCKET_URL}/profiles/${key}`;
 };
 
 module.exports = { uploadFile };
