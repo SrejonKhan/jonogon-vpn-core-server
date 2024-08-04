@@ -1,25 +1,15 @@
-const crypto = require("crypto");
-
-const sanitizeOrGenerateStr = (filename) => {
+const sanitizeStr = (filename) => {
   const allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
-  const maxLength = 100;
-  const minLength = 3;
 
-  const finalFilename = "";
-  filename = filename.toLowerCase();
-  filename = filename.replace(/ /g, "-");
+  let finalFilename = "";
+  finalFilename = filename.replace(/ /g, "-").toLowerCase();
 
-  if (typeof filename !== "string" || filename.length < minLength || filename.length > maxLength) {
-    finalFilename += crypto.randomBytes(2).toString("hex");
-  }
-
-  for (const char of filename) {
-    if (!allowedChars.includes(char)) {
-      finalFilename += crypto.randomBytes(2).toString("hex");
-    }
-  }
-
+  finalFilename = finalFilename.replace(/[^a-zA-Z0-9_-]+/g, () => {
+    // Generate a random allowed character
+    const randomIndex = Math.floor(Math.random() * allowedChars.length);
+    return allowedChars[randomIndex];
+  });
   return finalFilename;
 };
 
-module.exports = { sanitizeOrGenerateStr };
+module.exports = { sanitizeStr };

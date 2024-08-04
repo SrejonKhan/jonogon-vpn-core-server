@@ -7,7 +7,7 @@ const shell = require("shelljs");
 
 const addOvpnProfile = (reqProfileName, profilePassword, username) => {
   try {
-    reqProfileName = sanitizeOrGenerateStr(reqProfileName);
+    reqProfileName = sanitizeStr(reqProfileName);
 
     const serverName = process.env.SERVER_NAME;
     const randomStr = crypto.randomBytes(3).toString("base64url");
