@@ -3,6 +3,7 @@ const { sanitizeOrGenerateStr } = require("../utils/file");
 const getUuid = require("uuid-by-string");
 const path = require("path");
 const fs = require("fs");
+const { execSync } = require("node:child_process");
 
 const addOvpnProfile = (reqProfileName, profilePassword, username) => {
   try {
