@@ -1,5 +1,6 @@
 require("dotenv").config();
 const server = require("./server");
+const { uploadFile } = require("./services/upload.service");
 
 const port = process.env.PORT;
 

@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const { sanitizeOrGenerateStr } = require("../utils/file");
 const getUuid = require("uuid-by-string");
 const path = require("path");
+const fs = require("fs");
 
 const addOvpnProfile = (reqProfileName, profilePassword, username) => {
   try {
@@ -19,10 +20,13 @@ const addOvpnProfile = (reqProfileName, profilePassword, username) => {
 
     const ovpnFilePath = path.join("/root", `${ovpnProfileNameHash}.ovpn`);
 
+    const ovpnFileBase64 = fs.readFileSync(ovpnFilePath, { encoding: "base64" });
+
     return {
       ovpnFilePath,
       ovpnProfileName,
       ovpnProfileNameHash,
+      ovpnFileBase64,
     };
   } catch (error) {
     console.error("Error during OpenVPN installation:", error);

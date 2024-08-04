@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const { addOvpnProfile } = require("../services/core.service");
-const { uploadFile } = require("../services/upload.service");
 const API_SERVER_RSA_PUBLIC_KEY = Buffer.from(process.env.API_SERVER_RSA_PUBLIC_KEY, "utf-8").toString();
 
 const createVpnProfile = async (req, res, next) => {
@@ -25,13 +24,17 @@ const createVpnProfile = async (req, res, next) => {
 
     /* Create VPN Profile & Upload to CDN */
     const { profileName, profilePassword, username } = req.body;
-    const { ovpnFilePath, ovpnProfileName, ovpnProfileNameHash } = addOvpnProfile(profileName, profilePassword, username);
-    const ovpnCdnUrl = await uploadFile(ovpnFilePath, ovpnProfileNameHash, ovpnProfileName);
+    const { ovpnFilePath, ovpnProfileName, ovpnProfileNameHash, ovpnFileBase64 } = addOvpnProfile(
+      profileName,
+      profilePassword,
+      username
+    );
 
     const body = {
+      ovpnFilePath,
       ovpnProfileName,
       ovpnProfileNameHash,
-      ovpnCdnUrl,
+      ovpnFileBase64,
     };
     res.status(200).json(body);
   } catch (ex) {
