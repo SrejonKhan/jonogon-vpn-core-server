@@ -1,5 +1,5 @@
 const sanitizeStr = (filename) => {
-  const allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
+  const allowedChars = "abcdefghijklmnopqrstuvwxyz0123456789_-";
 
   let finalFilename = "";
   finalFilename = filename.replace(/ /g, "-").toLowerCase();
