@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const { createVpnProfile } = require("./controllers/vpn.controller");
-const { uploadFile } = require("./services/upload.service");
 
 const server = express();
 
