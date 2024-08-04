@@ -16,7 +16,7 @@ const addOvpnProfile = (reqProfileName, profilePassword, username) => {
     const ovpnProfileName = `${serverName}-${username}-${reqProfileName}`;
     const ovpnProfileNameHash = getUuid(ovpnProfileName + randomStr);
 
-    const command = `MENU_OPTION=1 CLIENT=${ovpnProfileNameHash} PASS=${profilePassword} ./openvpn-install.sh`;
+    const command = `MENU_OPTION=1 CLIENT=${ovpnProfileNameHash} PASS=${profilePassword} root/openvpn-install.sh`;
     execSync(command, { stdio: "inherit" });
 
     const ovpnFilePath = path.join("/root", `${ovpnProfileNameHash}.ovpn`);
