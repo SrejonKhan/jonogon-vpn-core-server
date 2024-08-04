@@ -3,7 +3,7 @@ const { sanitizeOrGenerateStr } = require("../utils/file");
 const getUuid = require("uuid-by-string");
 const path = require("path");
 const fs = require("fs");
-const { execSync } = require("node:child_process");
+const shell = require("shelljs");
 
 const addOvpnProfile = (reqProfileName, profilePassword, username) => {
   try {
@@ -16,8 +16,11 @@ const addOvpnProfile = (reqProfileName, profilePassword, username) => {
     const ovpnProfileName = `${serverName}-${username}-${reqProfileName}`;
     const ovpnProfileNameHash = getUuid(ovpnProfileName + randomStr);
 
-    const command = `MENU_OPTION=1 CLIENT=${ovpnProfileNameHash} PASS=${profilePassword} root/openvpn-install.sh`;
-    execSync(command, { stdio: "inherit" });
+    // process.env.MENU_OPTION = "1";
+    // process.env.CLIENT = ovpnProfileNameHash;
+    // process.env.PASS = profilePassword;
+    const command = `export MENU_OPTION=1 CLIENT=${ovpnProfileNameHash} PASS=${profilePassword} root/openvpn-install.sh`;
+    shell.exec(command);
 
     const ovpnFilePath = path.join("/root", `${ovpnProfileNameHash}.ovpn`);
 
