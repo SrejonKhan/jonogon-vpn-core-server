@@ -1,6 +1,9 @@
 const jwt = require("jsonwebtoken");
 const { addOvpnProfile } = require("../services/core.service");
-const API_SERVER_RSA_PUBLIC_KEY = Buffer.from(process.env.API_SERVER_RSA_PUBLIC_KEY, "utf-8").toString();
+const API_SERVER_RSA_PUBLIC_KEY = Buffer.from(
+  process.env.API_SERVER_RSA_PUBLIC_KEY,
+  "utf-8"
+).toString();
 
 const createVpnProfile = async (req, res, next) => {
   try {
@@ -15,20 +18,25 @@ const createVpnProfile = async (req, res, next) => {
     if (req.header("ServerAuthorization").split(" ").length < 2) {
       return res.status(400).json("Invalid Server Authorization header!");
     }
-    const serverCred = jwt.verify(req.header("ServerAuthorization").split(" ")[1], API_SERVER_RSA_PUBLIC_KEY, {
-      algorithms: ["RS256"],
-    });
+    const serverCred = jwt.verify(
+      req.header("ServerAuthorization").split(" ")[1],
+      API_SERVER_RSA_PUBLIC_KEY,
+      {
+        algorithms: ["RS256"],
+      }
+    );
     if (serverCred.serverPassKey != "Inquilab_Zindabad") {
       return res.status(400).json("Very Clever?");
     }
 
     /* Create VPN Profile & Upload to CDN */
-    const { profileName, profilePassword, username } = req.body;
-    const { ovpnFilePath, ovpnProfileName, ovpnProfileNameHash, ovpnFileBase64 } = addOvpnProfile(
-      profileName,
-      profilePassword,
-      username
-    );
+    const { profileName, username } = req.body;
+    const {
+      ovpnFilePath,
+      ovpnProfileName,
+      ovpnProfileNameHash,
+      ovpnFileBase64,
+    } = addOvpnProfile(profileName, username);
 
     const body = {
       ovpnFilePath,

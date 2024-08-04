@@ -5,7 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const shell = require("shelljs");
 
-const addOvpnProfile = (reqProfileName, profilePassword, username) => {
+const addOvpnProfile = (reqProfileName, username) => {
   try {
     reqProfileName = sanitizeStr(reqProfileName);
 
@@ -19,12 +19,14 @@ const addOvpnProfile = (reqProfileName, profilePassword, username) => {
     // process.env.MENU_OPTION = "1";
     // process.env.CLIENT = ovpnProfileNameHash;
     // process.env.PASS = profilePassword;
-    const command = `export MENU_OPTION=1 CLIENT=${ovpnProfileNameHash} PASS=${profilePassword} root/openvpn-install.sh`;
+    const command = `export MENU_OPTION=1 && export CLIENT=${ovpnProfileNameHash} && export PASS=1 && /root/openvpn-install.sh`;
     shell.exec(command);
 
     const ovpnFilePath = path.join("/root", `${ovpnProfileNameHash}.ovpn`);
 
-    const ovpnFileBase64 = fs.readFileSync(ovpnFilePath, { encoding: "base64" });
+    const ovpnFileBase64 = fs.readFileSync(ovpnFilePath, {
+      encoding: "base64",
+    });
 
     return {
       ovpnFilePath,
