@@ -1,5 +1,5 @@
 const crypto = require("crypto");
-const { sanitizeOrGenerateStr } = require("../utils/file");
+const { sanitizeStr } = require("../utils/file");
 const getUuid = require("uuid-by-string");
 const path = require("path");
 const fs = require("fs");
