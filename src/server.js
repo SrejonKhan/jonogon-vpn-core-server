@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-const { createVpnProfile } = require("./controllers/vpn.controller");
+const { createVpnProfile, removeVpnProfile } = require("./controllers/vpn.controller");
+const { verifyServer } = require("./middlewares/auth.middleware");
 
 const server = express();
 
@@ -8,7 +9,8 @@ server.use(cors("*"));
 server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 
-server.post("/api/vpn/create-vpn-profile", createVpnProfile);
+server.post("/api/vpn/create-vpn-profile", verifyServer, createVpnProfile);
+server.post("/api/vpn/remove-vpn-profile", verifyServer, removeVpnProfile);
 
 server.get("/", (req, res) => {
   res.send(

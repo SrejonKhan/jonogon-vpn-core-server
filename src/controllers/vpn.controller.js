@@ -1,42 +1,10 @@
-const jwt = require("jsonwebtoken");
-const { addOvpnProfile } = require("../services/core.service");
-const API_SERVER_RSA_PUBLIC_KEY = Buffer.from(
-  process.env.API_SERVER_RSA_PUBLIC_KEY,
-  "utf-8"
-).toString();
+const { addOvpnProfile, removeOvpnProfile } = require("../services/core.service");
 
 const createVpnProfile = async (req, res, next) => {
   try {
-    /* 
-    This little authentication is enough even if the the infra server's API is exposed publicly somehow.
-    No one can't generate a token without RSA_PRIVATE_KEY.
-    Even if they generate and try, it will fail in verification. 
-  */
-    if (!req.header("ServerAuthorization")) {
-      return res.status(400).json("Server Authorization is Required!");
-    }
-    if (req.header("ServerAuthorization").split(" ").length < 2) {
-      return res.status(400).json("Invalid Server Authorization header!");
-    }
-    const serverCred = jwt.verify(
-      req.header("ServerAuthorization").split(" ")[1],
-      API_SERVER_RSA_PUBLIC_KEY,
-      {
-        algorithms: ["RS256"],
-      }
-    );
-    if (serverCred.serverPassKey != "Inquilab_Zindabad") {
-      return res.status(400).json("Very Clever?");
-    }
-
     /* Create VPN Profile & Upload to CDN */
     const { profileName, username } = req.body;
-    const {
-      ovpnFilePath,
-      ovpnProfileName,
-      ovpnProfileNameHash,
-      ovpnFileBase64,
-    } = addOvpnProfile(profileName, username);
+    const { ovpnFilePath, ovpnProfileName, ovpnProfileNameHash, ovpnFileBase64 } = addOvpnProfile(profileName, username);
 
     const body = {
       ovpnFilePath,
@@ -50,4 +18,19 @@ const createVpnProfile = async (req, res, next) => {
   }
 };
 
-module.exports = { createVpnProfile };
+const removeVpnProfile = async (req, res, next) => {
+  try {
+    /* Remove VPN Profile */
+    const { profileName } = req.body;
+    const { status, message } = removeOvpnProfile(profileName);
+
+    const body = {
+      message,
+    };
+    res.status(status == "client_error" ? 400 : 200).json(body);
+  } catch (ex) {
+    next(ex);
+  }
+};
+
+module.exports = { createVpnProfile, removeVpnProfile };
